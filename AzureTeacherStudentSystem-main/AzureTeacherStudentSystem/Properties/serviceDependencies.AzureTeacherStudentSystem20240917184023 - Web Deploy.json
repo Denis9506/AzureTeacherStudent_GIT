@@ -1,0 +1,25 @@
+{
+  "dependencies": {
+    "secrets1": {
+      "serviceConnectorResourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroupName')]/providers/Microsoft.Web/sites/AzureTeacherStudentSystem20240917184023/providers/Microsoft.ServiceLinker/linkers/VaultUri_ABBB4D6D1D",
+      "secretStore": null,
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.KeyVault/vaults/AzureTeacherStudentVault",
+      "type": "secrets.keyVault",
+      "connectionId": "VaultUri"
+    },
+    "storage1": {
+      "serviceConnectorResourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroupName')]/providers/Microsoft.Web/sites/AzureTeacherStudentSystem20240917184023/providers/Microsoft.ServiceLinker/linkers/StorageAccountConnectionString_D2425FFB5F, /subscriptions/6f23969c-852a-4803-b36d-915480f530ab/resourcegroups/_itstep_east_us_/providers/Microsoft.Web/sites/AzureTeacherStudentSystem20240917184023/providers/Microsoft.ServiceLinker/linkers/StorageAccountConnectionString_CC98A25CA1",
+      "secretStore": null,
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Storage/storageAccounts/azureteacherstudent",
+      "type": "storage.azure",
+      "connectionId": "StorageAccountConnectionString"
+    },
+    "mssql1": {
+      "serviceConnectorResourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroupName')]/providers/Microsoft.Web/sites/AzureTeacherStudentSystem20240917184023/providers/Microsoft.ServiceLinker/linkers/ConnectionStringsDevelop_F9DE23B121",
+      "secretStore": "AzureKeyVault",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/testazservicesdbserver/databases/AzureTeacherStudentSystem_db",
+      "type": "mssql.azure",
+      "connectionId": "ConnectionStrings:Develop"
+    }
+  }
+}

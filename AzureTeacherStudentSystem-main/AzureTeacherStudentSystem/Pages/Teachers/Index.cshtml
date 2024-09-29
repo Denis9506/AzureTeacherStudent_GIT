@@ -1,0 +1,95 @@
+﻿@page
+@model AzureTeacherStudentSystem.Pages.Teachers.IndexModel
+@inject IHttpContextAccessor accessor
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<h1>Index</h1>
+
+@if (accessor.HttpContext?.Session.GetInt32("role") == 0)
+{
+    <p>
+        <a asp-page="Create">Create New</a>
+    </p>
+}
+<form method="get">
+    <div class="form-group">
+        <label for="nameFilter">First Name:</label>
+        <input type="text" class="form-control" id="nameFilter" asp-for="NameFilter">
+    </div>
+    <div class="form-group">
+        <label for="lastNameFilter">Last Name:</label>
+        <input type="text" class="form-control" id="lastNameFilter" asp-for="LastNameFilter">
+    </div>
+    <div class="form-group">
+        <label for="salaryMin">Minimum Salary:</label>
+        <input type="number" class="form-control" id="salaryMin" asp-for="SalaryMin">
+    </div>
+    <div class="form-group">
+        <label for="salaryMax">Maximum Salary:</label>
+        <input type="number" class="form-control" id="salaryMax" asp-for="SalaryMax">
+    </div>
+    <button type="submit" class="btn btn-primary">Apply Filters</button>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Teacher[0].Salary)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Teacher[0].FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Teacher[0].LastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Teacher[0].Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Teacher[0].Password)
+            </th>
+            <th>
+                Subject
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Teacher)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Salary)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Password)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Subjects.First().Name)
+                </td>
+                <td>
+                    @if (accessor.HttpContext?.Session.GetInt32("role") == 0)
+                    {
+                        <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a>
+                        <a asp-page="./Details" asp-route-id="@item.Id">Details</a>
+                        <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
