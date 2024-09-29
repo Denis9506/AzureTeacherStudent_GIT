@@ -13,7 +13,7 @@ builder.Configuration.AddAzureKeyVault(keyVaultEndpoint, new DefaultAzureCredent
 builder.Services.AddDbContext<DataContext>(opt => opt.UseSqlServer(builder.Configuration["Develop"]));
 //builder.Services.AddSingleton(_ => ConnectionMultiplexer.Connect(builder.Configuration["Redis"]).GetDatabase());
 //builder.Services.AddTransient<ICacheService, RedisCacheService>();
-
+builder.Services.AddHostedService<GroupCleanupService>();
 builder.Services.AddSession(opt =>
 {
     opt.IdleTimeout = TimeSpan.FromMinutes(30);

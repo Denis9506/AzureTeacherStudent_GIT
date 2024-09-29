@@ -12,9 +12,9 @@ namespace AzureTeacherStudentSystem.Pages.Groups
 {
     public class IndexModel : PageModel
     {
-        private readonly AzureTeacherStudentSystem.Data.DataContext _context;
+        private readonly DataContext _context;
 
-        public IndexModel(AzureTeacherStudentSystem.Data.DataContext context)
+        public IndexModel(DataContext context)
         {
             _context = context;
         }

@@ -30,7 +30,7 @@ namespace AzureTeacherStudentSystem.Pages.Groups
                 return NotFound();
             }
 
-            var group =  await _context.Groups.FirstOrDefaultAsync(m => m.Id == id);
+            var group = await _context.Groups.Include(x => x.Students).FirstOrDefaultAsync(m => m.Id == id);
             if (group == null)
             {
                 return NotFound();
@@ -39,16 +39,16 @@ namespace AzureTeacherStudentSystem.Pages.Groups
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more information, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
+            var groupToUpdate = await _context.Groups.Include(g => g.Students).FirstOrDefaultAsync(g => g.Id == Group.Id);
+
+            if (groupToUpdate == null)
             {
-                return Page();
+                return NotFound();
             }
 
-            _context.Attach(Group).State = EntityState.Modified;
+            groupToUpdate.Name = Group.Name;
 
             try
             {
@@ -68,6 +68,8 @@ namespace AzureTeacherStudentSystem.Pages.Groups
 
             return RedirectToPage("./Index");
         }
+
+
 
         private bool GroupExists(int id)
         {
