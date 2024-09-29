@@ -35,13 +35,12 @@ namespace AzureTeacherStudentSystem.Pages
         [BindProperty]
         public Lesson Lesson { get; set; } = default!;
 
-        // For more information, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync(int teacher, int subject, int group)
         {
-            Lesson.Schedule = await _context.Schedules.FirstOrDefaultAsync(x => x.Teacher.Id == teacher &&
-            x.Subject.Id == subject && x.Group.Id == group);
-            Lesson.Homework = "";
+            Lesson.Schedule = await _context.Schedules
+                .FirstOrDefaultAsync(x => x.Teacher.Id == teacher && x.Subject.Id == subject && x.Group.Id == group);
 
+            Lesson.Homework = string.Empty;
             _context.Lessons.Add(Lesson);
             await _context.SaveChangesAsync();
 

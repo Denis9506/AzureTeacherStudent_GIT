@@ -9,8 +9,8 @@ public class DataContext : DbContext
     {
         
     }
-
-    public DbSet<User> Users { get; set; }
+	public DbSet<Homework> Homeworks { get; set; }
+	public DbSet<User> Users { get; set; }
     public DbSet<Student> Students { get; set; }
     public DbSet<Teacher> Teachers { get; set; }
     public DbSet<Group> Groups { get; set; }

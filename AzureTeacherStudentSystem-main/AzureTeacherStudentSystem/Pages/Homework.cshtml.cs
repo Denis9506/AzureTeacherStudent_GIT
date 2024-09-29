@@ -9,26 +9,26 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AzureTeacherStudentSystem.Pages
 {
-    public class HomeworkModel : PageModel
-    {
-        private readonly TableServiceClient _tableServiceClient;
+	public class HomeworkModel : PageModel
+	{
+		private readonly DataContext _context;
 
-        public HomeworkModel(TableServiceClient tableServiceClient)
-        {
-            _tableServiceClient = tableServiceClient;
-            Homeworks = new List<HomeworkEntity>();
-        }
+		public HomeworkModel(DataContext context)
+		{
+			_context = context;
+		}
 
-        public List<HomeworkEntity> Homeworks { get; set; }
+		public List<Homework> Homeworks { get; set; }
 
-        public async Task OnGetAsync()
-        {
-            int studentId = 1;
-            var table = _tableServiceClient.GetTableClient("homeworks");
-            Homeworks = table.Query<HomeworkEntity>()
-                .AsEnumerable()
-                //.Where(x => x.StudentId == studentId)
-                .ToList();
-        }
-    }
+		public async Task OnGetAsync()
+		{
+			int studentId = 4; 
+			Homeworks = await _context.Homeworks
+				.Include(h => h.Student)
+				.Include(h => h.Lesson)
+				.Where(h => h.Student.Id == studentId)
+				.ToListAsync();
+		}
+	}
+
 }

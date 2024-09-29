@@ -26,9 +26,9 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddRazorPages();
 builder.Services.AddAzureClients(clientBuilder =>
 {
-    clientBuilder.AddBlobServiceClient(builder.Configuration["StorageAccountConnectionString"]);
-    clientBuilder.AddTableServiceClient(builder.Configuration["StorageAccountConnectionString"]);
-    clientBuilder.AddQueueServiceClient(builder.Configuration["StorageAccountConnectionString"]);
+    clientBuilder.AddBlobServiceClient(builder.Configuration["StorageAccountConnString"]);
+    clientBuilder.AddTableServiceClient(builder.Configuration["StorageAccountConnString"]);
+    clientBuilder.AddQueueServiceClient(builder.Configuration["StorageAccountConnString"]);
 });
 
 var app = builder.Build();

@@ -31,12 +31,9 @@
 				@{
 					if (!item.IsArchived)
 					{
-						@if (accessor.HttpContext?.Session.GetInt32("role") == 0)
-						{
 							<td>
 								<a asp-area="" asp-page="/Students/Index" asp-route-GroupIdFilter="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
 							</td>
-						}
 					}
 					else
 					{

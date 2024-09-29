@@ -1,13 +1,12 @@
 ﻿@page
 @model AzureTeacherStudentSystem.Pages.HomeworkModel
 
-
 <div>
-    @foreach(var homework in Model.Homeworks)
+    @foreach (var homework in Model.Homeworks)
     {
         <div style="background: red;">
             <h1>@homework.Topic</h1>
         </div>
-        <br/>
+        <br />
     }
 </div>

@@ -15,11 +15,10 @@ namespace AzureTeacherStudentSystem.Pages
         private readonly BlobServiceClient _blobServiceClient;
         private readonly TableServiceClient _tableServiceClient;
 
-        public EditLessonModel(DataContext context, BlobServiceClient blobServiceClient, TableServiceClient tableServiceClient = null)
+        public EditLessonModel(DataContext context, BlobServiceClient blobServiceClient)
         {
             _context = context;
             _blobServiceClient = blobServiceClient;
-            _tableServiceClient = tableServiceClient;
         }
 
         [BindProperty]
@@ -45,62 +44,49 @@ namespace AzureTeacherStudentSystem.Pages
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more information, see https://aka.ms/RazorPagesCRUD.
-        public async Task<IActionResult> OnPostAsync(IFormFile? file)
+        public async Task<IActionResult> OnPostAsync(int id, IFormFile? file)
         {
-            try
+            var lessonToUpdate = await _context.Lessons
+                .Include(x => x.Schedule)
+                .ThenInclude(x => x.Group)
+                .ThenInclude(x => x.Students)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (lessonToUpdate == null)
             {
-                if (file != null && file.Length > 0)
-                {
-                    Lesson.Schedule = await _context.Schedules
-                        .Include(x => x.Group)
-                        .ThenInclude(x => x.Students)
-                        .FirstOrDefaultAsync(x => x.Lessons.Select(x => x.Id).Contains(Lesson.Id));
-
-                    var blobContainer = _blobServiceClient.GetBlobContainerClient("homework-files");
-                    await blobContainer.CreateIfNotExistsAsync();   
-                    var blobClient = blobContainer.GetBlobClient(file.FileName);
-
-                    using (var stream = file.OpenReadStream())
-                    {
-                        await blobClient.UploadAsync(stream, true);
-                    }
-
-                    Lesson.Homework = blobClient.Uri.ToString();
-
-                    //await _tableServiceClient.CreateTableIfNotExistsAsync("student_teacher_table");
-                    var table = _tableServiceClient.GetTableClient("homeworks");
-                    await table.CreateIfNotExistsAsync();
-
-                    foreach(var student in Lesson.Schedule.Group.Students)
-                    {
-                        await table.AddEntityAsync(new HomeworkEntity()
-                        {
-                            Topic = Lesson.Topic,
-                            StudentId = student.Id,
-                            LessonId = Lesson.Id
-                        });
-                    }
-                }
-
-                await _context.SaveChangesAsync();
+                return NotFound();
             }
-            catch (DbUpdateConcurrencyException)
+
+            if (file != null && file.Length > 0)
             {
-                if (!LessonExists(Lesson.Id))
+                var blobContainer = _blobServiceClient.GetBlobContainerClient("homework-files");
+                await blobContainer.CreateIfNotExistsAsync();
+                var blobClient = blobContainer.GetBlobClient(file.FileName);
+
+                using (var stream = file.OpenReadStream())
                 {
-                    return NotFound();
+                    await blobClient.UploadAsync(stream, true);
                 }
-                else
-                {
-                    throw;
-                }
+
+                lessonToUpdate.Homework = blobClient.Uri.ToString();
             }
+
+            foreach (var student in lessonToUpdate.Schedule.Group.Students)
+            {
+                var homework = new Homework()
+                {
+                    Topic = lessonToUpdate.Topic,
+                    Student = student,
+                    Lesson = lessonToUpdate
+                };
+
+                _context.Homeworks.Add(homework);
+            }
+
+            await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");
         }
-
         private bool LessonExists(int id)
         {
             return _context.Lessons.Any(e => e.Id == id);
